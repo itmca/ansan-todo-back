@@ -6,8 +6,6 @@ import { CreateTodoDto } from './dto/create-todo.dto';
 
 @Injectable()
 export class TodosService {
-  private readonly todos: Todo[] = [];
-
   constructor(@InjectModel(Todo.name) private todoModel: Model<TodoDocument>) {}
 
   async create(createTodoDto: CreateTodoDto): Promise<Todo> {
@@ -17,5 +15,15 @@ export class TodosService {
 
   async findAll(): Promise<Todo[]> {
     return this.todoModel.find().exec();
+  }
+
+  async update(id: number, createTodoDto: CreateTodoDto): Promise<Todo> {
+    return await this.todoModel
+      .findOneAndUpdate({ id: id }, createTodoDto)
+      .exec();
+  }
+
+  async delete(id: number): Promise<TodoDocument> {
+    return await this.todoModel.findOneAndDelete({ id: id }).exec();
   }
 }
